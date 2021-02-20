@@ -13,8 +13,8 @@ moncash = moncashify.API(client_id, secret_key)
 
 
 def main(event, context):
-    body=json.loads(event)['body']
-    transaction_id=body['payment']['transaction_id']
+    body=json.loads(json.loads(json.dumps(event))['body'])
+    transaction_id=json.loads(body['payment']['transaction_id'])
     console.log(body)
     data=moncash.transaction_details_by_transaction_id(transaction_id)
     if data['payment']['message']=='successful':
