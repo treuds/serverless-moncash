@@ -1,2 +1,3 @@
 .serverless
 functions/**/env
+node_modules
