@@ -23,7 +23,7 @@ def main(event, context):
     except:
         res=json.dumps({'statusCode': 500,'body': 'Unable to create payment'})
 
-    return 
+    return res
 
 def createOrder(orderline):
     #write the order to db

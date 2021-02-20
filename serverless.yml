@@ -60,8 +60,8 @@ provider:
     SECRET: ${env:MONCASH_SECRET}
 
 # you can add packaging information here
-#package:
-#  individually: true
+package:
+  individually: true
 #  include:
 #    - include-me.py
 #    - include-me-dir/**
@@ -71,7 +71,7 @@ provider:
 
 functions:
   verification: 
-    handler: Verification/verify.main
+    handler: handler.main
     module: functions/Verification
     memorySize: 128
     events:
@@ -79,7 +79,7 @@ functions:
           path: /payment/verify
           method: post
   payment:
-    handler: payment.main
+    handler: handler.main
     module: functions/Payment
     memorySize: 128
     events:
