@@ -6,6 +6,7 @@ import boto3
 from datetime import datetime
 from decimal import Decimal 
 from dynamodb_json import json_util as jsonn
+import math
 
 client_id=os.environ['CLIENT']
 secret_key=os.getenv('SECRET')
@@ -36,6 +37,7 @@ def createOrder(orderline):
     #table.put_item(orderline)
     print("inserted")
     res=moncash.payment(orderline['id'],orderline['amount'])
+    print(res)
     return res
 
 def Total(a):
@@ -45,4 +47,4 @@ def Total(a):
     # kalkil TCA a 10 %
     tca=total*0.10
     res=total+tca
-    return res
+    return math.ceil(res)
