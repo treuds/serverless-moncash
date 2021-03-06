@@ -21,11 +21,11 @@ def main(event, context):
         orderline['id']=str(uuid.uuid4())
         orderline['paymentCompleted']=False
         orderline['amount']= Total(orderline['items'])
-        print(orderline)
+        #print(orderline)
         response=createOrder(orderline)
-        res=json.dumps({'statusCode': 200,'body': response})
-        print(res)
-        return res
+        print(type(response))
+        res=json.dumps({'statusCode': 200,'body': response['url']})
+        return res 
     except:
         return json.dumps({'statusCode': 500,'body': 'Unable to create payment'})
 
@@ -37,8 +37,8 @@ def createOrder(orderline):
     #table.put_item(orderline)
     print("inserted")
     res=moncash.payment(orderline['id'],orderline['amount'])
-    print(res)
-    return res
+    print(res.get_response())
+    return res.get_response()
 
 def Total(a):
     total=0
@@ -47,4 +47,4 @@ def Total(a):
     # kalkil TCA a 10 %
     tca=total*0.10
     res=total+tca
-    return math.ceil(res)
+    return res
