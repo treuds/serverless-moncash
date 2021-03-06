@@ -10,18 +10,20 @@ secret_key=os.getenv('SECRET')
 order_table=os.getenv('ORDER_TABLE')
 
 moncash = moncashify.API(client_id, secret_key)
+dynamodb = boto3.resource('dynamodb')
 
 
 def main(event, context):
-    body=json.loads(json.loads(json.dumps(event))['body'])
-    transaction_id=json.loads(body['payment']['transaction_id'])
-    console.log(body)
+    #body=json.loads(json.loads(json.dumps(event))['body'])
+    #transaction_id=json.loads(body['payment']['transaction_id'])
+    transaction_id=(event['queryStringParameters']['transactionId'])
+    print("ID TRANSACTION", transaction_id)
     data=moncash.transaction_details_by_transaction_id(transaction_id)
     if data['payment']['message']=='successful':
         #update the order on our db
         idRef= data['payment']['reference']
         updateOrderById(idRef,True)
-        response={'statusCode': 200,'body': data['payment']}
+        response={'statusCode': 200,'body': "payment completed"}
     else:
         response={'statusCode': 500,'body': 'Unable to process payment'}
   
@@ -32,8 +34,6 @@ def main(event, context):
 
 
 def updateOrderById(id, completed=False):
-    if not dynamodb:
-        dynamodb = boto3.resource('dynamodb')
 
     table = dynamodb.Table(order_table)
 
@@ -48,4 +48,4 @@ def updateOrderById(id, completed=False):
     except ClientError as e:
         print(e.response['Error']['Message'])
     else:
-        return response['Item']
+        return response
